@@ -2,6 +2,8 @@ var isArray = require("is_array"),
     isRegExp = require("is_regexp"),
     isNullOrUndefined = require("is_null_or_undefined"),
     emptyFunction = require("empty_function"),
+    isFunction = require("is_function"),
+    has = require("has"),
     indexOf = require("index_of");
 
 
@@ -61,6 +63,33 @@ propTypes.oneOf = function createOneOfCheck(expectedValues) {
                 "expected one of " + JSON.stringify(expectedValues) + "."
             );
         }
+    });
+};
+
+propTypes.implement = function createOneOfCheck(expectedInterface) {
+    return createTypeChecker(function validate(props, propName, callerName) {
+        var results = null,
+            propInterface = props[propName],
+            propKey, propValidate, result;
+
+        for (propKey in propInterface) {
+            if (has(propInterface, propKey)) {
+                propValidate = expectedInterface[propKey];
+
+                if (isFunction(propValidate)) {
+                    result = propValidate(propInterface, propKey, callerName + "." + propKey);
+
+                    if (result) {
+                        results = results || [];
+                        results[results.length] = result;
+                    }
+                } else {
+                    throw new TypeError("Error");
+                }
+            }
+        }
+
+        return results;
     });
 };
 
