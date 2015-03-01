@@ -66,7 +66,18 @@ propTypes.oneOf = function createOneOfCheck(expectedValues) {
     });
 };
 
-propTypes.implement = function createOneOfCheck(expectedInterface) {
+propTypes.implement = function createImplementCheck(expectedInterface) {
+    var key;
+
+    for (key in expectedInterface) {
+        if (has(expectedInterface, key) && !isFunction(expectedInterface[key])) {
+            throw new TypeError(
+                "Invalid Interface value " + key + ", must be functions " +
+                "(props : Object, propName : String[, callerName : String]) return Error or null."
+            );
+        }
+    }
+
     return createTypeChecker(function validate(props, propName, callerName) {
         var results = null,
             propInterface = props[propName],
@@ -75,16 +86,11 @@ propTypes.implement = function createOneOfCheck(expectedInterface) {
         for (propKey in propInterface) {
             if (has(propInterface, propKey)) {
                 propValidate = expectedInterface[propKey];
+                result = propValidate(propInterface, propKey, callerName + "." + propKey);
 
-                if (isFunction(propValidate)) {
-                    result = propValidate(propInterface, propKey, callerName + "." + propKey);
-
-                    if (result) {
-                        results = results || [];
-                        results[results.length] = result;
-                    }
-                } else {
-                    throw new TypeError("Error");
+                if (result) {
+                    results = results || [];
+                    results[results.length] = result;
                 }
             }
         }
