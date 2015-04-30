@@ -1,5 +1,5 @@
 var isArray = require("is_array"),
-    isRegExp = require("is_regexp"),
+    isRegExp = require("is_reg_exp"),
     isNullOrUndefined = require("is_null_or_undefined"),
     emptyFunction = require("empty_function"),
     isFunction = require("is_function"),
