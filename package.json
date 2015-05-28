@@ -27,7 +27,6 @@
     "is_array": "git://github.com/nathanfaucett/is_array",
     "is_function": "git://github.com/nathanfaucett/is_function",
     "is_null_or_undefined": "git://github.com/nathanfaucett/is_null_or_undefined",
-    "is_reg_exp": "git://github.com/nathanfaucett/is_reg_exp",
-    "is_regexp": "git://github.com/nathanfaucett/is_reg_exp"
+    "is_regexp": "git://github.com/nathanfaucett/is_regexp.git"
   }
 }
