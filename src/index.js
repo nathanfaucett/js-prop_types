@@ -83,8 +83,8 @@ propTypes.implement = function createImplementCheck(expectedInterface) {
             propInterface = props[propName],
             propKey, propValidate, result;
 
-        for (propKey in propInterface) {
-            if (has(propInterface, propKey)) {
+        for (propKey in expectedInterface) {
+            if (has(expectedInterface, propKey)) {
                 propValidate = expectedInterface[propKey];
                 result = propValidate(propInterface, propKey, callerName + "." + propKey);
 
