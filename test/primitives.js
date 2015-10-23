@@ -1,147 +1,130 @@
-var assert = require("assert"),
-    propTypes = require("../src/index");
+var tape = require("tape"),
+    propTypes = require("..");
 
 
-describe("propTypes", function() {
-    describe("#primitives", function() {
-        describe("#array", function() {
-            it("should return a TypeError if the property with propName in props is not an array", function() {
-                var result = propTypes.array({
-                    value: {}
-                }, "value", "TestFunction");
-                assert(result.message === "Invalid value of type object supplied to TestFunction expected array.");
+tape("propTypes#array: should return a TypeError if the property with propName in props is not an array ", function(assert) {
+    var result = propTypes.array({
+        value: {}
+    }, "value", "TestFunction");
+    assert.equal(result.message, "Invalid value of type object supplied to TestFunction expected array.");
 
-                assert(propTypes.array({
-                    value: []
-                }, "value", "TestFunction") === null);
-            });
-        });
+    assert.equal(propTypes.array({
+        value: []
+    }, "value", "TestFunction"), null);
 
-        describe("#bool", function() {
-            it("should return a TypeError if the property with propName in props is not a boolean", function() {
-                var result = propTypes.bool({
-                    value: {}
-                }, "value", "TestFunction");
-                assert(result.message === "Invalid value of type object supplied to TestFunction expected boolean.");
+    assert.end();
+});
 
-                assert(propTypes.bool({
-                    value: true
-                }, "value", "TestFunction") === null);
-            });
-        });
+tape("propTypes#bool: should return a TypeError if the property with propName in props is not a boolean", function(assert) {
+    var result = propTypes.bool({
+        value: {}
+    }, "value", "TestFunction");
+    assert.equal(result.message, "Invalid value of type object supplied to TestFunction expected boolean.");
 
-        describe("#func", function() {
-            it("should return a TypeError if the property with propName in props is not a function", function() {
-                var result = propTypes.func({
-                    value: {}
-                }, "value", "TestFunction");
-                assert(result.message === "Invalid value of type object supplied to TestFunction expected function.");
+    assert.equal(propTypes.bool({
+        value: true
+    }, "value", "TestFunction"), null);
 
-                assert(propTypes.func({
-                    value: function() {}
-                }, "value", "TestFunction") === null);
-            });
-        });
+    assert.end();
+});
 
-        describe("#func", function() {
-            it("should return a TypeError if the property with propName in props is not a function", function() {
-                var result = propTypes.func({
-                    value: {}
-                }, "value", "TestFunction");
-                assert(result.message === "Invalid value of type object supplied to TestFunction expected function.");
+tape("propTypes#func: should return a TypeError if the property with propName in props is not a function", function(assert) {
+    var result = propTypes.func({
+        value: {}
+    }, "value", "TestFunction");
+    assert.equal(result.message, "Invalid value of type object supplied to TestFunction expected function.");
 
-                assert(propTypes.func({
-                    value: function() {}
-                }, "value", "TestFunction") === null);
-            });
-        });
+    assert.equal(propTypes.func({
+        value: function() {}
+    }, "value", "TestFunction"), null);
 
-        describe("#number", function() {
-            it("should return a TypeError if the property with propName in props is not a number", function() {
-                var result = propTypes.number({
-                    value: "string"
-                }, "value", "TestFunction");
-                assert(result.message === "Invalid value of type string supplied to TestFunction expected number.");
+    assert.end();
+});
 
-                assert(propTypes.number({
-                    value: 0
-                }, "value", "TestFunction") === null);
-            });
-        });
+tape("propTypes#number: should return a TypeError if the property with propName in props is not a number", function(assert) {
+    var result = propTypes.number({
+        value: "string"
+    }, "value", "TestFunction");
+    assert.equal(result.message, "Invalid value of type string supplied to TestFunction expected number.");
 
-        describe("#object", function() {
-            it("should return a TypeError if the property with propName in props is not a object", function() {
-                var result = propTypes.object({
-                    value: []
-                }, "value", "TestFunction");
-                assert(result.message === "Invalid value of type array supplied to TestFunction expected object.");
+    assert.equal(propTypes.number({
+        value: 0
+    }, "value", "TestFunction"), null);
 
-                assert(propTypes.object({
-                    value: {}
-                }, "value", "TestFunction") === null);
-            });
-        });
+    assert.end();
+});
 
-        describe("#string", function() {
-            it("should return a TypeError if the property with propName in props is not a string", function() {
-                var result = propTypes.string({
-                    value: 0
-                }, "value", "TestFunction");
-                assert(result.message === "Invalid value of type number supplied to TestFunction expected string.");
+tape("propTypes#object: should return a TypeError if the property with propName in props is not a object", function(assert) {
+    var result = propTypes.object({
+        value: []
+    }, "value", "TestFunction");
+    assert.equal(result.message, "Invalid value of type array supplied to TestFunction expected object.");
 
-                assert(propTypes.string({
-                    value: "string"
-                }, "value", "TestFunction") === null);
-            });
-        });
+    assert.equal(propTypes.object({
+        value: {}
+    }, "value", "TestFunction"), null);
 
-        describe("#regexp", function() {
-            it("should return a TypeError if the property with propName in props is not a regexp", function() {
-                var result = propTypes.regexp({
-                    value: "string"
-                }, "value", "TestFunction");
-                assert(result.message === "Invalid value of value string supplied to TestFunction, expected RexExp.");
+    assert.end();
+});
 
-                assert(propTypes.regexp({
-                    value: /./
-                }, "value", "TestFunction") === null);
-            });
-        });
+tape("propTypes#string: should return a TypeError if the property with propName in props is not a string", function(assert) {
+    var result = propTypes.string({
+        value: 0
+    }, "value", "TestFunction");
+    assert.equal(result.message, "Invalid value of type number supplied to TestFunction expected string.");
 
-        describe("#instanceOf(expectedClass)", function() {
-            it("should return a TypeError if the property with propName in props is not an instance of expectedClass", function() {
-                var checker, result;
+    assert.equal(propTypes.string({
+        value: "string"
+    }, "value", "TestFunction"), null);
 
-                function Class() {}
+    assert.end();
+});
 
-                checker = propTypes.instanceOf(Class);
+tape("propTypes#regexp: should return a TypeError if the property with propName in props is not a regexp", function(assert) {
+    var result = propTypes.regexp({
+        value: "string"
+    }, "value", "TestFunction");
+    assert.equal(result.message, "Invalid value of value string supplied to TestFunction, expected RexExp.");
 
-                result = checker({
-                    value: {}
-                }, "value", "TestFunction");
-                assert(result.message === "Invalid value of type object supplied to TestFunction, expected instance of Class.");
+    assert.equal(propTypes.regexp({
+        value: /./
+    }, "value", "TestFunction"), null);
 
-                assert(checker({
-                    value: new Class()
-                }, "value", "TestFunction") === null);
-            });
-        });
+    assert.end();
+});
 
-        describe("#oneOf(array)", function() {
-            it("should return a TypeError if the property with propName in props is not in array", function() {
-                var checker, result;
+tape("propTypes#instanceOf(expectedClass) should return a TypeError if the property with propName in props is not an instance of expectedClass", function(assert) {
+    var checker, result;
 
-                checker = propTypes.oneOf([1, 2, 3, 4, 5]);
+    function Class() {}
 
-                result = checker({
-                    value: 6
-                }, "value", "TestFunction");
-                assert(result.message === "Invalid value of value 6 supplied to TestFunction, expected one of [1,2,3,4,5].");
+    checker = propTypes.instanceOf(Class);
 
-                assert(checker({
-                    value: 1
-                }, "value", "TestFunction") === null);
-            });
-        });
-    });
+    result = checker({
+        value: {}
+    }, "value", "TestFunction");
+    assert.equal(result.message, "Invalid value of type object supplied to TestFunction, expected instance of Class.");
+
+    assert.equal(checker({
+        value: new Class()
+    }, "value", "TestFunction"), null);
+
+    assert.end();
+});
+
+tape("propTypes#oneOf(array) should return a TypeError if the property with propName in props is not in array", function(assert) {
+    var checker, result;
+
+    checker = propTypes.oneOf([1, 2, 3, 4, 5]);
+
+    result = checker({
+        value: 6
+    }, "value", "TestFunction");
+    assert.equal(result.message, "Invalid value of value 6 supplied to TestFunction, expected one of [1,2,3,4,5].");
+
+    assert.equal(checker({
+        value: 1
+    }, "value", "TestFunction"), null);
+
+    assert.end();
 });
