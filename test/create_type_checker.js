@@ -9,7 +9,7 @@ tape(
     function(assert) {
         var customChecker, result;
 
-        customChecker = propTypes.createTypeChecker(function(props, propName, callerName) {
+        customChecker = propTypes.createTypeChecker(function(props, propName, callerName /*, locale */ ) {
             var propValue = props[propName];
 
             if (propValue !== "property") {
@@ -31,15 +31,15 @@ tape(
 
         assert.equal(customChecker({
             value: "property"
-        }, "value", "TestFunction"), null);
+        }, "value", "TestFunction", "en"), null);
 
         assert.equal(customChecker({
             value: null
-        }, "value", "TestFunction"), null);
+        }, "value", "TestFunction", "en"), null);
 
         result = customChecker.isRequired({
             value: null
-        }, "value", "TestFunction");
+        }, "value", "TestFunction", "en");
         assert.equal(
             result.message, "Required value was not specified in TestFunction."
         );

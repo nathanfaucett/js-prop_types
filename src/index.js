@@ -1,4 +1,5 @@
-var isArray = require("is_array"),
+var i18n = require("i18n"),
+    isArray = require("is_array"),
     isRegExp = require("is_regexp"),
     isNullOrUndefined = require("is_null_or_undefined"),
     emptyFunction = require("empty_function"),
@@ -8,7 +9,11 @@ var isArray = require("is_array"),
 
 
 var propTypes = exports,
-    ANONYMOUS_CALLER = "<<anonymous>>";
+    defaultLocale = "en";
+
+
+i18n = i18n.create(true, true);
+i18n.add("en", require("./en"));
 
 
 propTypes.array = createPrimitiveTypeChecker("array");
@@ -18,32 +23,28 @@ propTypes.number = createPrimitiveTypeChecker("number");
 propTypes.object = createPrimitiveTypeChecker("object");
 propTypes.string = createPrimitiveTypeChecker("string");
 
-propTypes.regexp = createTypeChecker(function validate(props, propName, callerName) {
+propTypes.regexp = createTypeChecker(function validate(props, propName, callerName, locale) {
     var propValue = props[propName];
 
     if (isRegExp(propValue)) {
         return null;
     } else {
-        return new TypeError(
-            "Invalid " + propName + " of value " + propValue + " supplied to " + callerName + ", " +
-            "expected RexExp."
-        );
+        return new TypeError(i18n(locale || defaultLocale, "prop_types.regexp", propName, propValue, callerName));
     }
 });
 
 propTypes.instanceOf = function createInstanceOfCheck(expectedClass) {
-    return createTypeChecker(function validate(props, propName, callerName) {
+    return createTypeChecker(function validate(props, propName, callerName, locale) {
         var propValue = props[propName],
             expectedClassName;
 
         if (propValue instanceof expectedClass) {
             return null;
         } else {
-            expectedClassName = expectedClass.name || ANONYMOUS_CALLER;
+            expectedClassName = expectedClass.name || ("<<" + i18n(locale || defaultLocale, "prop_types.anonymous") + ">>");
 
             return new TypeError(
-                "Invalid " + propName + " of type " + getPreciseType(propValue) + " supplied to " + callerName + ", " +
-                "expected instance of " + expectedClassName + "."
+                i18n(locale || defaultLocale, "prop_types.instance_of", propName, getPreciseType(propValue), callerName, expectedClassName)
             );
         }
     });
@@ -52,15 +53,14 @@ propTypes.instanceOf = function createInstanceOfCheck(expectedClass) {
 propTypes.any = createTypeChecker(emptyFunction.thatReturnsNull);
 
 propTypes.oneOf = function createOneOfCheck(expectedValues) {
-    return createTypeChecker(function validate(props, propName, callerName) {
+    return createTypeChecker(function validate(props, propName, callerName, locale) {
         var propValue = props[propName];
 
         if (indexOf(expectedValues, propValue) !== -1) {
             return null;
         } else {
             return new TypeError(
-                "Invalid " + propName + " of value " + propValue + " supplied to " + callerName + ", " +
-                "expected one of " + JSON.stringify(expectedValues) + "."
+                i18n(locale || defaultLocale, "prop_types.one_of", propName, propValue, callerName, JSON.stringify(expectedValues))
             );
         }
     });
@@ -78,7 +78,7 @@ propTypes.implement = function createImplementCheck(expectedInterface) {
         }
     }
 
-    return createTypeChecker(function validate(props, propName, callerName) {
+    return createTypeChecker(function validate(props, propName, callerName, locale) {
         var results = null,
             propInterface = props[propName],
             propKey, propValidate, result;
@@ -86,7 +86,7 @@ propTypes.implement = function createImplementCheck(expectedInterface) {
         for (propKey in expectedInterface) {
             if (has(expectedInterface, propKey)) {
                 propValidate = expectedInterface[propKey];
-                result = propValidate(propInterface, propKey, callerName + "." + propKey);
+                result = propValidate(propInterface, propKey, callerName + "." + propKey, locale || defaultLocale);
 
                 if (result) {
                     results = results || [];
@@ -105,23 +105,21 @@ propTypes.createTypeChecker = createTypeChecker;
 
 function createTypeChecker(validate) {
 
-    function checkType(props, propName, callerName) {
+    function checkType(props, propName, callerName, locale) {
         if (isNullOrUndefined(props[propName])) {
             return null;
         } else {
-            return validate(props, propName, callerName || ANONYMOUS_CALLER);
+            return validate(props, propName, callerName || ("<<" + i18n(locale || defaultLocale, "prop_types.anonymous") + ">>"), locale || defaultLocale);
         }
     }
 
-    checkType.isRequired = function checkIsRequired(props, propName, callerName) {
-        callerName = callerName || ANONYMOUS_CALLER;
+    checkType.isRequired = function checkIsRequired(props, propName, callerName, locale) {
+        callerName = callerName || ("<<" + i18n(locale || defaultLocale, "prop_types.anonymous") + ">>");
 
         if (isNullOrUndefined(props[propName])) {
-            return new TypeError(
-                "Required " + propName + " was not specified in " + callerName + "."
-            );
+            return new TypeError(i18n(locale || defaultLocale, "prop_types.is_required", propName, callerName));
         } else {
-            return validate(props, propName, callerName);
+            return validate(props, propName, callerName, locale || defaultLocale);
         }
     };
 
@@ -129,16 +127,15 @@ function createTypeChecker(validate) {
 }
 
 function createPrimitiveTypeChecker(expectedType) {
-    return createTypeChecker(function validate(props, propName, callerName) {
+    return createTypeChecker(function validate(props, propName, callerName, locale) {
         var propValue = props[propName],
             type = getPropType(propValue);
 
         if (type !== expectedType) {
-            callerName = callerName || ANONYMOUS_CALLER;
+            callerName = callerName || ("<<" + i18n(locale || defaultLocale, "prop_types.anonymous") + ">>");
 
             return new TypeError(
-                "Invalid " + propName + " of type " + getPreciseType(propValue) + " " +
-                "supplied to " + callerName + " expected " + expectedType + "."
+                i18n(locale || defaultLocale, "prop_types.primitive", propName, getPreciseType(propValue), callerName, expectedType)
             );
         } else {
             return null;

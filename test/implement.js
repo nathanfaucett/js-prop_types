@@ -5,6 +5,7 @@ var tape = require("tape"),
 tape("propTypes#implement(expectedInterface : Object) should force props to implement passed interface", function(assert) {
     var implementChecker, results;
 
+
     implementChecker = propTypes.implement({
         object: propTypes.object,
         array: propTypes.array

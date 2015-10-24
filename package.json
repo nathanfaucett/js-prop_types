@@ -11,7 +11,7 @@
     "test": "npm run test-node",
     "test-node": "node ./test | ./node_modules/.bin/tap-spec",
     "test-node-raw": "node ./test",
-    "test-browser-local": "zuul --local 8080 --ui tape -- ./test"
+    "test-browser-local": "zuul --local 9999 --ui tape -- ./test"
   },
   "keywords": [
     "prop_types",
@@ -29,6 +29,7 @@
     "zuul": "^3.6.0"
   },
   "dependencies": {
+    "i18n": "git://github.com/nathanfaucett/i18n.git",
     "empty_function": "git://github.com/nathanfaucett/empty_function.git",
     "has": "git://github.com/nathanfaucett/has.git",
     "index_of": "git://github.com/nathanfaucett/index_of.git",
