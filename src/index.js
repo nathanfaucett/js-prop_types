@@ -13,7 +13,11 @@ var propTypes = exports,
 
 
 i18n = i18n.create(true, true);
-i18n.add("en", require("./en"));
+
+
+if (!i18n.has("en", "prop_types.anonymous")) {
+    i18n.add("en", require("./en"));
+}
 
 
 propTypes.createTypeChecker = createTypeChecker;
