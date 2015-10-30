@@ -16,92 +16,7 @@ i18n = i18n.create(true, true);
 i18n.add("en", require("./en"));
 
 
-propTypes.array = createPrimitiveTypeChecker("array");
-propTypes.bool = createPrimitiveTypeChecker("boolean");
-propTypes.func = createPrimitiveTypeChecker("function");
-propTypes.number = createPrimitiveTypeChecker("number");
-propTypes.object = createPrimitiveTypeChecker("object");
-propTypes.string = createPrimitiveTypeChecker("string");
-
-propTypes.regexp = createTypeChecker(function validate(props, propName, callerName, locale) {
-    var propValue = props[propName];
-
-    if (isRegExp(propValue)) {
-        return null;
-    } else {
-        return new TypeError(i18n(locale || defaultLocale, "prop_types.regexp", propName, propValue, callerName));
-    }
-});
-
-propTypes.instanceOf = function createInstanceOfCheck(expectedClass) {
-    return createTypeChecker(function validate(props, propName, callerName, locale) {
-        var propValue = props[propName],
-            expectedClassName;
-
-        if (propValue instanceof expectedClass) {
-            return null;
-        } else {
-            expectedClassName = expectedClass.name || ("<<" + i18n(locale || defaultLocale, "prop_types.anonymous") + ">>");
-
-            return new TypeError(
-                i18n(locale || defaultLocale, "prop_types.instance_of", propName, getPreciseType(propValue), callerName, expectedClassName)
-            );
-        }
-    });
-};
-
-propTypes.any = createTypeChecker(emptyFunction.thatReturnsNull);
-
-propTypes.oneOf = function createOneOfCheck(expectedValues) {
-    return createTypeChecker(function validate(props, propName, callerName, locale) {
-        var propValue = props[propName];
-
-        if (indexOf(expectedValues, propValue) !== -1) {
-            return null;
-        } else {
-            return new TypeError(
-                i18n(locale || defaultLocale, "prop_types.one_of", propName, propValue, callerName, JSON.stringify(expectedValues))
-            );
-        }
-    });
-};
-
-propTypes.implement = function createImplementCheck(expectedInterface) {
-    var key;
-
-    for (key in expectedInterface) {
-        if (has(expectedInterface, key) && !isFunction(expectedInterface[key])) {
-            throw new TypeError(
-                "Invalid Interface value " + key + ", must be functions " +
-                "(props : Object, propName : String[, callerName : String]) return Error or null."
-            );
-        }
-    }
-
-    return createTypeChecker(function validate(props, propName, callerName, locale) {
-        var results = null,
-            propInterface = props[propName],
-            propKey, propValidate, result;
-
-        for (propKey in expectedInterface) {
-            if (has(expectedInterface, propKey)) {
-                propValidate = expectedInterface[propKey];
-                result = propValidate(propInterface, propKey, callerName + "." + propKey, locale || defaultLocale);
-
-                if (result) {
-                    results = results || [];
-                    results[results.length] = result;
-                }
-            }
-        }
-
-        return results;
-    });
-};
-
-
 propTypes.createTypeChecker = createTypeChecker;
-
 
 function createTypeChecker(validate) {
 
@@ -126,8 +41,94 @@ function createTypeChecker(validate) {
     return checkType;
 }
 
+propTypes.array = createPrimitiveTypeChecker("array");
+propTypes.bool = createPrimitiveTypeChecker("boolean");
+propTypes["boolean"] = propTypes.bool;
+propTypes.func = createPrimitiveTypeChecker("function");
+propTypes["function"] = propTypes.func;
+propTypes.number = createPrimitiveTypeChecker("number");
+propTypes.object = createPrimitiveTypeChecker("object");
+propTypes.string = createPrimitiveTypeChecker("string");
+
+propTypes.regexp = createTypeChecker(function validateRegExp(props, propName, callerName, locale) {
+    var propValue = props[propName];
+
+    if (isRegExp(propValue)) {
+        return null;
+    } else {
+        return new TypeError(i18n(locale || defaultLocale, "prop_types.regexp", propName, propValue, callerName));
+    }
+});
+
+propTypes.instanceOf = function createInstanceOfCheck(expectedClass) {
+    return createTypeChecker(function validateInstanceOf(props, propName, callerName, locale) {
+        var propValue = props[propName],
+            expectedClassName;
+
+        if (propValue instanceof expectedClass) {
+            return null;
+        } else {
+            expectedClassName = expectedClass.name || ("<<" + i18n(locale || defaultLocale, "prop_types.anonymous") + ">>");
+
+            return new TypeError(
+                i18n(locale || defaultLocale, "prop_types.instance_of", propName, getPreciseType(propValue), callerName, expectedClassName)
+            );
+        }
+    });
+};
+
+propTypes.any = createTypeChecker(emptyFunction.thatReturnsNull);
+
+propTypes.oneOf = function createOneOfCheck(expectedValues) {
+    return createTypeChecker(function validateOneOf(props, propName, callerName, locale) {
+        var propValue = props[propName];
+
+        if (indexOf(expectedValues, propValue) !== -1) {
+            return null;
+        } else {
+            return new TypeError(
+                i18n(locale || defaultLocale, "prop_types.one_of", propName, propValue, callerName, JSON.stringify(expectedValues))
+            );
+        }
+    });
+};
+
+propTypes.implement = function createImplementCheck(expectedInterface) {
+    var key;
+
+    for (key in expectedInterface) {
+        if (has(expectedInterface, key) && !isFunction(expectedInterface[key])) {
+            throw new TypeError(
+                "Invalid Function Interface for " + key + ", must be functions " +
+                "Function(props: Object, propName: String, callerName: String, locale) return Error or null."
+            );
+        }
+    }
+
+    return createTypeChecker(function validateImplement(props, propName, callerName, locale) {
+        var results = null,
+            localHas = has,
+            propInterface = props[propName],
+            propKey, propValidate, result;
+
+        for (propKey in expectedInterface) {
+            if (localHas(expectedInterface, propKey)) {
+                propValidate = expectedInterface[propKey];
+                result = propValidate(propInterface, propKey, callerName + "." + propKey, locale || defaultLocale);
+
+                if (result) {
+                    results = results || [];
+                    results[results.length] = result;
+                }
+            }
+        }
+
+        return results;
+    });
+};
+
 function createPrimitiveTypeChecker(expectedType) {
-    return createTypeChecker(function validate(props, propName, callerName, locale) {
+    return createTypeChecker(function validatePrimitive(props, propName, callerName, locale) {
         var propValue = props[propName],
             type = getPropType(propValue);
 

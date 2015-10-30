@@ -47,8 +47,8 @@ tape("propTypes#implement(expectedInterface : Object) should force props to impl
     } catch (e) {
         assert.equal(
             e.message,
-            "Invalid Interface value object, must be functions " +
-            "(props : Object, propName : String[, callerName : String]) return Error or null.",
+            "Invalid Function Interface for object, must be functions " +
+            "Function(props: Object, propName: String, callerName: String, locale) return Error or null.",
             "should throw an Error if interface values or not functions"
         );
     }
