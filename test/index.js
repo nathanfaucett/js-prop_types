@@ -1,3 +1,4 @@
-require("./create_type_checker");
+require("./createTypeChecker");
 require("./implement");
+require("./arrayOf");
 require("./primitives");

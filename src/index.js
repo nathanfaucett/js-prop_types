@@ -97,6 +97,38 @@ propTypes.oneOf = function createOneOfCheck(expectedValues) {
     });
 };
 
+propTypes.arrayOf = function createArrayOfCheck(checkType) {
+
+    if (!isFunction(checkType)) {
+        throw new TypeError(
+            "Invalid Function Interface for arrayOf, checkType must be a function" +
+            "Function(props: Object, propName: String, callerName: String, locale) return Error or null."
+        );
+    }
+
+    return createTypeChecker(function validateArrayOf(props, propName, callerName, locale) {
+        var error = propTypes.array(props, propName, callerName, locale),
+            propValue, i, il;
+
+        if (error) {
+            return error;
+        } else {
+            propValue = props[propName];
+            i = -1;
+            il = propValue.length - 1;
+
+            while (i++ < il) {
+                error = checkType(propValue, i, callerName + "[" + i + "]", locale);
+                if (error) {
+                    return error;
+                }
+            }
+
+            return null;
+        }
+    });
+};
+
 propTypes.implement = function createImplementCheck(expectedInterface) {
     var key;
 
