@@ -20,8 +20,6 @@ tape("propTypes#arrayOf(checkType: Function) should force prop array to implemen
         "TestFunction"
     );
 
-    console.log(results);
-
     try {
         propTypes.arrayOf({});
     } catch (e) {

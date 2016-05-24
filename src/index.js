@@ -16,7 +16,16 @@ i18n = i18n.create(true, true);
 
 
 if (!i18n.has("en", "prop_types.anonymous")) {
-    i18n.add("en", require("./en"));
+    i18n.add("en", {
+        prop_types: {
+            regexp: "Invalid %s of value %s supplied to %s, expected RexExp.",
+            instance_of: "Invalid %s of type %s supplied to %s, expected instance of %s.",
+            one_of: "Invalid %s of value %s supplied to %s, expected one of %s.",
+            is_required: "Required %s was not specified in %s.",
+            primitive: "Invalid %s of type %s supplied to %s expected %s.",
+            anonymous: "anonymous"
+        }
+    });
 }
 
 
