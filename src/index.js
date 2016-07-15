@@ -1,32 +1,30 @@
-var i18n = require("i18n"),
-    isArray = require("is_array"),
-    isRegExp = require("is_regexp"),
-    isNullOrUndefined = require("is_null_or_undefined"),
-    emptyFunction = require("empty_function"),
-    isFunction = require("is_function"),
-    has = require("has"),
-    indexOf = require("index_of");
+var i18n = require("@nathanfaucett/i18n"),
+    isArray = require("@nathanfaucett/is_array"),
+    isRegExp = require("@nathanfaucett/is_regexp"),
+    isNullOrUndefined = require("@nathanfaucett/is_null_or_undefined"),
+    emptyFunction = require("@nathanfaucett/empty_function"),
+    isFunction = require("@nathanfaucett/is_function"),
+    has = require("@nathanfaucett/has"),
+    indexOf = require("@nathanfaucett/index_of");
 
 
 var propTypes = exports,
     defaultLocale = "en";
 
 
-i18n = i18n.create(true, true);
+i18n = i18n.create(true, false);
 
 
-if (!i18n.has("en", "prop_types.anonymous")) {
-    i18n.add("en", {
-        prop_types: {
-            regexp: "Invalid %s of value %s supplied to %s, expected RexExp.",
-            instance_of: "Invalid %s of type %s supplied to %s, expected instance of %s.",
-            one_of: "Invalid %s of value %s supplied to %s, expected one of %s.",
-            is_required: "Required %s was not specified in %s.",
-            primitive: "Invalid %s of type %s supplied to %s expected %s.",
-            anonymous: "anonymous"
-        }
-    });
-}
+i18n.add("en", {
+    prop_types: {
+        regexp: "Invalid %s of value %s supplied to %s, expected RexExp.",
+        instance_of: "Invalid %s of type %s supplied to %s, expected instance of %s.",
+        one_of: "Invalid %s of value %s supplied to %s, expected one of %s.",
+        is_required: "Required %s was not specified in %s.",
+        primitive: "Invalid %s of type %s supplied to %s expected %s.",
+        anonymous: "anonymous"
+    }
+});
 
 
 propTypes.createTypeChecker = createTypeChecker;
