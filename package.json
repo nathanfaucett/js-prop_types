@@ -1,6 +1,6 @@
 {
   "name": "@nathanfaucett/prop_types",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "propTypes for the browser and node.js",
   "repository": {
     "type": "git",
@@ -29,9 +29,9 @@
     "zuul": "^3.7.2"
 },
   "dependencies": {
-    "@nathanfaucett/i18n": "^0.0.1",
+    "@nathanfaucett/i18n": "^0.0.3",
     "@nathanfaucett/empty_function": "^0.0.1",
-    "@nathanfaucett/has": "^0.0.1",
+    "@nathanfaucett/has": "^0.0.2",
     "@nathanfaucett/index_of": "^0.0.1",
     "@nathanfaucett/is_array": "^0.0.1",
     "@nathanfaucett/is_function": "^0.0.1",
